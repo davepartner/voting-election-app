@@ -15,7 +15,7 @@ class AuditFirm
      */
     public function handle($request, Closure $next)
     {
-        if(Auth::user()->role_id == 3){ //if user is audit firm
+        if(Auth::check() && Auth::user()->role_id == 3){ //if user is audit firm
             return $next($request);
         }
 

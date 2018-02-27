@@ -25,7 +25,14 @@ class Setting extends Model
     const UPDATED_AT = 'updated_at';
 
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at',
+        'nomination_start_date',
+        'nomination_end_date',
+        'voting_start_date',
+        'voting_end_date'
+    
+    ];
 
 
     public $fillable = [
@@ -34,6 +41,8 @@ class Setting extends Model
         'voting_start_date',
         'voting_end_date'
     ];
+
+    
 
     /**
      * The attributes that should be casted to native types.

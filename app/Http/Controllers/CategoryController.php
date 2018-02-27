@@ -8,8 +8,11 @@ use App\Repositories\CategoryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Auth;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
+use App\Models\NominationUser;
+use App\Models\Nomination;
 
 class CategoryController extends AppBaseController
 {
@@ -32,6 +35,7 @@ class CategoryController extends AppBaseController
         $this->categoryRepository->pushCriteria(new RequestCriteria($request));
         $categories = $this->categoryRepository->all();
 
+        
         return view('categories.index')
             ->with('categories', $categories);
     }
@@ -81,7 +85,33 @@ class CategoryController extends AppBaseController
             return redirect(route('categories.index'));
         }
 
-        return view('categories.show')->with('category', $category);
+
+        $nominations = Nomination::all(); //all nominations
+        $nominationSelecteds = Nomination::where('is_admin_selected', 1)->get(); //admin selected nominations
+
+        //check if this viewer has nominated someone in this category before
+        // A user can only nominate one person per category
+        $hasNominatedBefore = 0;
+        
+         $nominationUser = NominationUser::where('user_id', Auth::user()->id)
+                                         ->where('category_id', $id )->first();
+                   if($nominationUser) {
+                        $hasNominatedBefore = 1;
+
+                        //get details the nomination they made
+                        $nomination = Nomination::find($nominationUser['nomination_id']); 
+
+                        return view('categories.show')->with('category', $category)
+                        ->with('nomination', $nomination)
+                        ->with('hasNominatedBefore', $hasNominatedBefore)
+                        ->with('nominations', $nominations)
+                        ->with('nominationSelected', $nominationSelecteds);
+                   }                     
+
+
+
+        return view('categories.show')->with('category', $category)
+        ->with('nominations', $nominations)->with('nominationSelected', $nominationSelected);
     }
 
     /**

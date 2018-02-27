@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
     return view('welcome');
-})->middleware('auth');;
+})->middleware('auth');
 
 Auth::routes();
 
@@ -42,9 +42,9 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-
+//1
 //only admin and moderator can access
-Route::middleware(['admin', 'moderator'])->group(function () {
+Route::middleware(['moderator'])->group(function () {
 
     Route::resource('nominationUsers', 'NominationUserController');
 
@@ -71,11 +71,21 @@ Route::middleware(['admin', 'moderator'])->group(function () {
     Route::delete('votings/{id}', 'VotingController@destroy');
 
 
+            Route::resource('categories', 'CategoryController');
+
+            Route::resource('nominations', 'NominationController');
+
+            Route::resource('votings', 'VotingController');
+
     //only admin can see this
-    Route::middleware(['admin', 'moderator'])->group(function () {
+    Route::middleware(['admin'])->group(function () {
+
+
             Route::resource('settings', 'SettingController');
             
             Route::resource('roles', 'RoleController');
+
+            Route::resource('users', 'UserController');
     });
 
 });

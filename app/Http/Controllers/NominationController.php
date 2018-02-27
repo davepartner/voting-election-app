@@ -8,8 +8,11 @@ use App\Repositories\NominationRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Auth;
 use Prettus\Repository\Criteria\RequestCriteria;
-use Response;
+use Response; 
+use App\Models\Nomination; 
+use App\Models\NominationUser; 
 
 class NominationController extends AppBaseController
 {
@@ -56,12 +59,52 @@ class NominationController extends AppBaseController
     public function store(CreateNominationRequest $request)
     {
         $input = $request->all();
+        $input['user_id'] = Auth::user()->id;
 
-        $nomination = $this->nominationRepository->create($input);
+        //check database if nomination already exists, then add 1
+        $nominationsCheck = Nomination::where('name',$request->input('name') )->first();
 
-        Flash::success('Nomination saved successfully.');
+        if($nominationsCheck){//if it does
 
-        return redirect(route('nominations.index'));
+            if($nominationsCheck['user_id'] != Auth::user()->id){
+                        //increase the number of the nomination
+                $no_of_nominations = $nominationsCheck['no_of_nominations'];
+                    $input['no_of_nominations'] = $no_of_nominations + 1;
+                    
+                     $this->nominationRepository
+                    ->update(['no_of_nominations'=> $input['no_of_nominations']], $nominationsCheck['id']);
+
+                   
+                    //create nomination_user record to track which users made which nominations
+                    NominationUser::create([
+                        'user_id'=>Auth::user()->id,
+                        'category_id'=>$request->input('category_id'),
+                        'nomination_id'=>$nominationsCheck['id']
+                    ]);
+
+            }
+           
+
+        }else{
+            //if nomination doesn't already exist, create new one
+            $input['no_of_nominations'] = 1;
+            $nomination = $this->nominationRepository->create($input);
+
+             //and track the user that created it
+            NominationUser::create([
+                'user_id'=>Auth::user()->id,
+                'category_id'=>$request->input('category_id'),
+                'nomination_id'=>$nomination->id
+            ]);
+
+        }
+        
+
+        
+
+        Flash::success('Nomination submitted successfully.');
+
+        return redirect()->back();
     }
 
     /**

@@ -2,40 +2,29 @@
     <thead>
         <tr>
             <th>Name</th>
+        <th>Gender</th>
+        <th>Linkedin Url</th>
+        <th>Bio</th>
         <th>Business Name</th>
-        <th>Nominations</th>
-        <th>Selected?</th>
-        <th>Won?</th>
+        <th>Reason For Nomination</th>
+        <th>No Of Nominations</th>
+        <th>Is Admin Selected</th>
+        <th>Is Won</th>
             <th colspan="3">Action</th>
         </tr>
     </thead>
     <tbody>
-    @foreach($nominations as $nomination)
+    @foreach($nominationSelecteds as $nomination)
         <tr>
-            <td>
-            <a href="{!! route('nominations.show', [$nomination->id]) !!}" style="font-weight: bold">
-            {!! $nomination->name !!} </a> ({!! $nomination->gender !!})
-                   
-            </td>
-            
+            <td>{!! $nomination->name !!}</td>
+            <td>{!! $nomination->gender !!}</td>
+            <td>{!! $nomination->linkedin_url !!}</td>
+            <td>{!! $nomination->bio !!}</td>
             <td>{!! $nomination->business_name !!}</td>
+            <td>{!! $nomination->reason_for_nomination !!}</td>
             <td>{!! $nomination->no_of_nominations !!}</td>
-            <td>
-            @if($nomination->is_admin_selected == 1)
-                    yes
-            @else 
-                    no 
-            @endif
-            
-            </td>
-            <td>
-            @if($nomination->is_won == 1)
-                    yes
-            @else 
-                    no 
-            @endif
-            
-            </td>
+            <td>{!! $nomination->is_admin_selected !!}</td>
+            <td>{!! $nomination->is_won !!}</td>
             <td>
                 {!! Form::open(['route' => ['nominations.destroy', $nomination->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>
