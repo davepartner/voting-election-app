@@ -15,6 +15,8 @@
 </div>
 
 
+
+
 <!-- Linkedin Url Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('linkedin_url', 'Linkedin Url:') !!}
@@ -45,36 +47,26 @@
 @if(Auth::user()->role_id < 3)
 <!-- Is Admin Selected Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('is_admin_selected', 'Is Admin Selected:') !!}
+    {!! Form::label('is_admin_selected', 'Selected for voting?') !!}
     <label class="checkbox-inline">
         {!! Form::hidden('is_admin_selected', false) !!}
-        {!! Form::checkbox('is_admin_selected', '1', null) !!} 1
+        {!! Form::checkbox('is_admin_selected', '1', null) !!}
     </label>
 </div>
 
 <!-- Is Won Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('is_won', 'Is Won:') !!}
+    {!! Form::label('is_won', 'Won?') !!}
     <label class="checkbox-inline">
         {!! Form::hidden('is_won', false) !!}
-        {!! Form::checkbox('is_won', '1', null) !!} 1
+        {!! Form::checkbox('is_won', '1', null) !!} 
     </label>
 </div>
 @endif
 
 
-<!-- Category Id Field -->
-@if(isset($category->id))
-<div class="form-group col-sm-6">
-    {!! Form::hidden('category_id', $category->id , [ 'class' => 'form-control']) !!}
-</div>
 
-@else
-<div class="form-group col-sm-6">
-    {!! Form::label('category_id', 'Category Id:') !!}
-    {!! Form::number('category_id', null , ['class' => 'form-control']) !!}
-</div>
-@endif
+
 <!-- Submit Field -->
 <div class="form-group col-sm-12">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}

@@ -11,7 +11,6 @@
             <div class="box-body">
                 <div class="row" style="padding-left: 20px">
                     @include('nominations.show_fields')
-                    <a href="{!! route('nominations.index') !!}" class="btn btn-default">Back</a>
                 </div>
             </div>
         </div>

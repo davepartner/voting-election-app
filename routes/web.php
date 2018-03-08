@@ -11,9 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->middleware('auth');
+Route::get('/', 'HomeController@index')->name('home')->middleware('auth');
+
+Route::get('/privacy-policy', function () {
+    return view('privacy-policy');
+});
 
 Auth::routes();
 
@@ -29,19 +31,6 @@ Route::get('register', 'Auth\LoginController@redirectToProvider')->name('registe
 
 
 
-//must be logged in
-Route::middleware(['auth'])->group(function () {
-
-    Route::resource('categories', 'CategoryController');
-
-    Route::resource('nominations', 'NominationController');
-
-    Route::resource('votings', 'VotingController');
-
-    Route::resource('users', 'UserController');
-
-});
-
 //1
 //only admin and moderator can access
 Route::middleware(['moderator'])->group(function () {
@@ -50,6 +39,7 @@ Route::middleware(['moderator'])->group(function () {
 
     //users
     Route::get('users', 'UserController@index');
+    Route::get('users/{id}/edit', 'UserController@edit');
     Route::delete('users/{id}', 'UserController@destroy');
     Route::match( ['put', 'patch'], 'users/{id}', 'UserController@update');
     
@@ -91,3 +81,18 @@ Route::middleware(['moderator'])->group(function () {
 });
 
 
+
+//must be logged in
+Route::middleware(['auth'])->group(function () {
+
+    Route::resource('categories', 'CategoryController');
+
+    Route::resource('nominations', 'NominationController');
+
+    Route::resource('votings', 'VotingController');
+
+    Route::resource('users', 'UserController');
+
+    Route::get('nominations/vote/{nomination_id}/{category_id}', 'NominationController@vote')->name('nominations.vote');
+
+});

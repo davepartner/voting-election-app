@@ -13,6 +13,8 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Response; 
 use App\Models\Nomination; 
 use App\Models\NominationUser; 
+use App\Models\Category; 
+use App\Models\Voting; 
 
 class NominationController extends AppBaseController
 {
@@ -39,6 +41,48 @@ class NominationController extends AppBaseController
             ->with('nominations', $nominations);
     }
 
+
+    public function vote(Request $request){
+
+        //create vote
+        //update nomination vote count
+        //redirect 
+
+
+        if(Auth::check()){
+
+            //check  if this person has voted in this category before
+            $checkVote = Voting::where('user_id', Auth::user()->id)
+            ->where('category_id', $request->category_id)->first();
+
+            if($checkVote){
+
+                Flash::success('You have voted before');
+                return  redirect()->back();
+            }
+            //create the voting
+            $voting = Voting::create([
+                'user_id' => Auth::user()->id,
+                'category_id' => $request->category_id,
+                'nomination_id' => $request->nomination_id
+            ]);
+
+            //get the current number of votes
+            $getNomination = Nomination::where('id', $request->nomination_id)->first();
+
+            //increase it by 1
+            $nomination = Nomination::where('id', $request->nomination_id)->update([
+                    'no_of_votes' => $getNomination->no_of_votes + 1
+            ]);
+
+            if($nomination){
+                Flash::success('You have voted successfully');
+
+                return redirect()->back();
+            }
+        }
+
+    }
     /**
      * Show the form for creating a new Nomination.
      *
@@ -138,13 +182,16 @@ class NominationController extends AppBaseController
     {
         $nomination = $this->nominationRepository->findWithoutFail($id);
 
+        $categories = Category::all();
+
         if (empty($nomination)) {
             Flash::error('Nomination not found');
 
             return redirect(route('nominations.index'));
         }
 
-        return view('nominations.edit')->with('nomination', $nomination);
+        return view('nominations.edit')->with('nomination', $nomination)
+        ->with('categories', $categories);
     }
 
     /**
@@ -162,14 +209,14 @@ class NominationController extends AppBaseController
         if (empty($nomination)) {
             Flash::error('Nomination not found');
 
-            return redirect(route('nominations.index'));
+            return redirect(route('categories.show',['id'=> $id]));
         }
 
         $nomination = $this->nominationRepository->update($request->all(), $id);
 
         Flash::success('Nomination updated successfully.');
 
-        return redirect(route('nominations.index'));
+        return redirect(route('categories.show',['id'=> $id]));
     }
 
     /**

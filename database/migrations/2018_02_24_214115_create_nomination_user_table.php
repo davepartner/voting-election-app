@@ -18,6 +18,7 @@ class CreateNominationUserTable extends Migration
             $table->integer('user_id');
             $table->integer('nomination_id'); 
             $table->integer('category_id'); 
+            $table->integer('no_of_votes')->default(0)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

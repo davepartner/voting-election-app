@@ -14,7 +14,6 @@
                   
                        @include('categories.show_fields')
 
-                    <a href="{!! route('categories.index') !!}" class="btn btn-default">Back</a>
                 </div>
             </div>
         </div>

@@ -13,6 +13,8 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use App\Models\NominationUser;
 use App\Models\Nomination;
+use App\Models\Voting;
+use App\Models\Category;
 
 class CategoryController extends AppBaseController
 {
@@ -86,32 +88,50 @@ class CategoryController extends AppBaseController
         }
 
 
+
         $nominations = Nomination::all(); //all nominations
         $nominationSelecteds = Nomination::where('is_admin_selected', 1)->get(); //admin selected nominations
 
-        //check if this viewer has nominated someone in this category before
-        // A user can only nominate one person per category
-        $hasNominatedBefore = 0;
-        
-         $nominationUser = NominationUser::where('user_id', Auth::user()->id)
-                                         ->where('category_id', $id )->first();
-                   if($nominationUser) {
-                        $hasNominatedBefore = 1;
-
-                        //get details the nomination they made
-                        $nomination = Nomination::find($nominationUser['nomination_id']); 
-
-                        return view('categories.show')->with('category', $category)
-                        ->with('nomination', $nomination)
-                        ->with('hasNominatedBefore', $hasNominatedBefore)
-                        ->with('nominations', $nominations)
-                        ->with('nominationSelected', $nominationSelecteds);
-                   }                     
 
 
 
-        return view('categories.show')->with('category', $category)
-        ->with('nominations', $nominations)->with('nominationSelected', $nominationSelected);
+//check if this viewer has nominated someone in this category before
+// A user can only nominate one person per category
+$hasNominatedBefore = 0;
+
+ $nominationUser = NominationUser::where('user_id', Auth::user()->id)
+                                 ->where('category_id', $id )->first();
+ $nomination = 0;
+
+           if($nominationUser) {
+                $hasNominatedBefore = 1;
+
+                //get details the nomination they made
+                $nomination = Nomination::find($nominationUser['nomination_id']); 
+                Flash::success('You have already nominated someone in this category');
+
+           }      
+
+                   
+//check  if this person has voted in this category before
+$checkVote = Voting::where('user_id', Auth::user()->id)
+->where('category_id', $category->id)->first();
+if($checkVote){
+
+    Flash::success('You have voted before');
+
+}
+
+
+
+           return view('categories.show')->with('category', $category)
+           ->with('nominations', $nominations)
+           ->with('nominationSelecteds', $nominationSelecteds)
+                ->with('nomination', $nomination)
+                ->with('hasNominatedBefore', $hasNominatedBefore)
+           ->with('checkVote', $checkVote);
+
+
     }
 
     /**

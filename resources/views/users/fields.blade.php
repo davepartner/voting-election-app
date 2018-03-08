@@ -1,3 +1,4 @@
+{{--
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:') !!}
@@ -34,17 +35,20 @@
     {!! Form::text('gender', null, ['class' => 'form-control']) !!}
 </div>
 
+--}}
+
 <!-- Role Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('role_id', 'Role Id:') !!}
-    {!! Form::number('role_id', null, ['class' => 'form-control']) !!}
+  <label for="role_id">Role</label>
+  <select class="form-control" id="role_id" name = "role_id">
+  <option value="{{ $user->role_id }}">{{ $user->role['name'] }}</option>
+  @foreach($roles as $role)
+    <option value="{{ $role->id }}">{{ $role->name }}</option>
+    @endforeach
+  </select>
 </div>
 
-<!-- Remember Token Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('remember_token', 'Remember Token:') !!}
-    {!! Form::text('remember_token', null, ['class' => 'form-control']) !!}
-</div>
+
 
 <!-- Submit Field -->
 <div class="form-group col-sm-12">
