@@ -14,6 +14,9 @@
   </select>
 </div>
 
+<!-- Linkedin Url Field -->
+    {!! Form::hidden('category_id', $category->id, ['class' => 'form-control']) !!}
+
 
 
 
@@ -65,6 +68,12 @@
 @endif
 
 
+<!-- Image Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('image', 'Image - 5mb max:') !!}
+    {!! Form::file('image', null, ['class' => 'form-control']) !!}
+   
+</div>
 
 
 <!-- Submit Field -->

@@ -20,8 +20,11 @@ class CategoryRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'name'
+        'name',
+        'image',
+        'icon'
     ];
+
 
     /**
      * Configure the Model

@@ -4,31 +4,30 @@
             <ul class="nav nav-tabs">
 
       <!-- Only voters should be able to see nomination and vote tab -->
-            @if(Auth::user()->role_id == 4 )
-              <li class="active"><a href="#nomination" data-toggle="tab" aria-expanded="true">Nomination</a></li>
+            @if( $isWithinNominationPeriod == 'yes')
+              <li class="active"><a href="#nomination" data-toggle="tab" aria-expanded="true">Nominate a candiate</a></li>
              @endif
              
-             
-              <li class="
-              @if(Auth::user()->role_id != 4 )
-
-                      active
-
-                @endif
-              "><a href="#nominees" data-toggle="tab" aria-expanded="true">
-              @if(Auth::user()->role_id == 4 )
-                Vote
-              @elseif(Auth::user()->role_id < 3 )
-                Nominees
-              @endif
+             @if($isWithinVotingPeriod == 'yes' || Auth::user()->role_id < 3  )
+              <li><a href="#nominees" data-toggle="tab" aria-expanded="true">
+                  @if(Auth::user()->role_id == 4 )
+                    Vote
+                  @elseif(Auth::user()->role_id < 3 )
+                    Nominees
+                  @endif
               </a></li>
+
+              @endif
+
+
+
              
             </ul>
 
            
             <div class="tab-content">
 
-            @if(Auth::user()->role_id == 4 )
+            @if($isWithinNominationPeriod == 'yes')
               <div class="tab-pane active" id="nomination">
                
               @if(!isset($hasNominatedBefore) || $hasNominatedBefore == 0)
@@ -36,7 +35,7 @@
 
                <p> <h3> Nominate a candidate </h3> </p>
               <div class="row">
-                    {!! Form::open(['route' => 'nominations.store']) !!}
+                    {!! Form::open(['route' => 'nominations.store', 'enctype' => 'multipart/form-data']) !!}
 
                         @include('nominations.fields')
 
@@ -57,7 +56,13 @@
                       <!-- Add the bg color to the header using any of the bg-* classes -->
                       <div class="widget-user-header bg-aqua-active">
                       <h3 class="widget-user-username">{{$nomination->name}}</h3>
+
                       <h5 class="widget-user-desc">{{$nomination->linked_url}}</h5>
+                      </div>
+
+                      <div class="widget-user-image">
+                        <img class="img-circle" src="{{ asset('storage/upload/images/'.$nomination->id.'/'.$nomination->image) }}"
+                         alt="{{$nomination->name}}">
                       </div>
 
                       <div class="box-footer">
@@ -129,15 +134,17 @@
 
               @endif
 
+<!-- only admins can see this at all times, voters can only see it during voting period -->
+ @if($isWithinVotingPeriod == 'yes' || Auth::user()->role_id < 3  )
 
 
 <div class="tab-pane 
-@if(Auth::user()->role_id != 4 )
+          @if(Auth::user()->role_id != 4 || $isWithinVotingPeriod == 'yes')
 
-active
+          active
 
-@endif
-" id="nominees">
+          @endif
+          " id="nominees">
                 
   <!-- Selected Nominees -->
   <h3> Selected nominees </h3>
@@ -170,6 +177,9 @@ active
 
               </div>
               <!-- /.tab-pane -->
+
+              @endif 
+
             </div>
             <!-- /.tab-content -->
           </div>

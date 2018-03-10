@@ -37,7 +37,13 @@ class CategoryController extends AppBaseController
         $this->categoryRepository->pushCriteria(new RequestCriteria($request));
         $categories = $this->categoryRepository->all();
 
-        
+        //voters should see a differently designed index
+        if(Auth::user()->role_id == 4){
+            return view('categories.election-index')
+            ->with('categories', $categories);
+        }
+
+
         return view('categories.index')
             ->with('categories', $categories);
     }
@@ -61,9 +67,35 @@ class CategoryController extends AppBaseController
      */
     public function store(CreateCategoryRequest $request)
     {
+
         $input = $request->all();
 
-        $category = $this->categoryRepository->create($input);
+        //Store events in the database
+        $this->validate($request, [
+
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5048',
+    
+        ]);
+
+        $image = $request->file('image');
+        //get the name of the image
+        $input['imagename'] = $image->getClientOriginalName();
+
+       
+        
+            $data = $request->all();
+            $data['image'] = $input['imagename'];
+            $data['user_id'] = Auth::user()->id;
+
+            $categoryUpload = Category::create($data);
+
+            if($categoryUpload){
+                //choose where to save it in our larave app
+                    $destinationPath = public_path('/storage/upload/images/'.$categoryUpload->id.'/');
+                
+                    $image->move($destinationPath, $input['imagename']);
+            }
+      
 
         Flash::success('Category saved successfully.');
 
@@ -83,7 +115,11 @@ class CategoryController extends AppBaseController
 
         if (empty($category)) {
             Flash::error('Category not found');
-
+            //voters should see a differently designed index
+            if(Auth::user()->role_id == 4){
+                return view('categories.election-index')
+                ->with('categories', $categories);
+            }
             return redirect(route('categories.index'));
         }
 
@@ -96,8 +132,13 @@ class CategoryController extends AppBaseController
 
 
 //check if this viewer has nominated someone in this category before
-// A user can only nominate one person per category
+// A user can only nominate one person per category, unless they are an admin
 $hasNominatedBefore = 0;
+$nominationUser = NominationUser::where('user_id', Auth::user()->id)
+                                 ->where('category_id', $id )->first();
+ $nomination = 0;
+ 
+if(Auth::user()->role_id > 2 ){ //admins can nominate more than once
 
  $nominationUser = NominationUser::where('user_id', Auth::user()->id)
                                  ->where('category_id', $id )->first();
@@ -112,7 +153,9 @@ $hasNominatedBefore = 0;
 
            }      
 
-                   
+        }                 
+
+        
 //check  if this person has voted in this category before
 $checkVote = Voting::where('user_id', Auth::user()->id)
 ->where('category_id', $category->id)->first();
@@ -122,6 +165,22 @@ if($checkVote){
 
 }
 
+//find next and previous categories
+
+$nextCategory = Category::where('id', '>' ,$id)->first();
+$previousCategory = Category::where('id', '<' ,$id)->first();
+
+//voters should see a differently designed index
+if(Auth::user()->role_id == 4){
+    return view('categories.election-show')->with('category', $category)
+           ->with('nominations', $nominations)
+           ->with('nominationSelecteds', $nominationSelecteds)
+                ->with('nomination', $nomination)
+                ->with('hasNominatedBefore', $hasNominatedBefore)
+           ->with('checkVote', $checkVote)
+           ->with('nextCategory', $nextCategory)
+           ->with('previousCategory', $previousCategory);
+}
 
 
            return view('categories.show')->with('category', $category)
@@ -129,7 +188,9 @@ if($checkVote){
            ->with('nominationSelecteds', $nominationSelecteds)
                 ->with('nomination', $nomination)
                 ->with('hasNominatedBefore', $hasNominatedBefore)
-           ->with('checkVote', $checkVote);
+           ->with('checkVote', $checkVote)
+           ->with('nextCategory', $nextCategory)
+           ->with('previousCategory', $previousCategory);
 
 
     }

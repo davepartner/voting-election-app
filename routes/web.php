@@ -19,7 +19,11 @@ Route::get('/privacy-policy', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+Route::get('/login', function(){
+   return view('election-home');
+})->name('login');
+
+Route::get('/home', 'CategoriesController@index')->name('home')->middleware('auth');
 
 //facebook login
 Route::get('login/facebook', 'Auth\LoginController@redirectToProvider')->name('login.facebook');

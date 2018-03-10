@@ -46,7 +46,23 @@
 
             <!-- Logo -->
             <a href="#" class="logo">
-                <b>Voting App</b>
+                <b> 
+                
+                @if($isWithinVotingPeriod == 'yes')
+
+                                    Voting
+
+                    @elseif($isWithinNominationPeriod == 'yes')
+
+                                     Nomination
+
+                    @else 
+
+                                     Nomination & Voting 
+
+                    @endif
+                App
+                </b>
             </a>
 
             <!-- Header Navbar -->
@@ -55,9 +71,29 @@
                 <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
+
+                 
+
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
-                    <ul class="nav navbar-nav">
+                   
+                    
+                     <ul class="nav navbar-nav">
+
+                     <li> <a href="/settings"> <b> Nomination  period: </b> 
+                     {{ $getViewSetting->nomination_start_date->format('D d, M') }} -  
+                     {{ $getViewSetting->nomination_end_date->format('D d, M, Y') }} 
+                     
+                     </a> </li>
+
+
+                     <li> <a href="/settings"> <b> Voting  period: </b> 
+                     {{ $getViewSetting->voting_start_date->format('D d, M') }} -  
+                     {{ $getViewSetting->voting_end_date->format('D d, M, Y') }} 
+                     
+                     </a> </li>
+
+
                         <!-- User Account Menu -->
                         <li class="dropdown user user-menu">
                             <!-- Menu Toggle Button -->
@@ -74,8 +110,9 @@
                                     <img src="{{ Auth::user()->avatar }}"
                                          class="img-circle" alt="User Image"/>
                                     <p>
-                                        {!! Auth::user()->name !!}
-                                        <small>Member since {!! Auth::user()->created_at->format('M. Y') !!}</small>
+                                        {!! Auth::user()->name !!} 
+                                        <small>Member since {!! Auth::user()->created_at->format('d, M. Y') !!}</small>
+                                        
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->

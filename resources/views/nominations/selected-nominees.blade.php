@@ -9,11 +9,12 @@
 <div class="box box-widget widget-user">
             <!-- Add the bg color to the header using any of the bg-* classes -->
             <div class="widget-user-header bg-aqua-active">
-              <h3 class="widget-user-username">{{$nomination->name}} ({{$nomination->no_of_votes}} votes ) </h3>
+              <h3 class="widget-user-username">{{$nomination->name}} <br/> 
+              <small style="color: white; "> ( {{$nomination->no_of_votes}} votes ) </small></h3>
               <h5 class="widget-user-desc">{{$nomination->business_name}}</h5>
             </div>
             <div class="widget-user-image">
-              <img class="img-circle" src="{{$nomination->avatar}}" alt="{{$nomination->name}}">
+              <img class="img-circle" src="{{ asset('storage/upload/images/'.$nomination->id.'/'.$nomination->image) }}" alt="{{$nomination->name}}">
             </div>
             <div class="box-footer">
 

@@ -16,6 +16,7 @@ class CreateNominationsTable extends Migration
         Schema::create('nominations', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('image')->nullable();
             $table->string('gender');
             $table->string('linkedin_url')->nullable();
             $table->string('bio')->nullable();

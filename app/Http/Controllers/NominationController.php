@@ -102,11 +102,16 @@ class NominationController extends AppBaseController
      */
     public function store(CreateNominationRequest $request)
     {
+
+
         $input = $request->all();
+
+
         $input['user_id'] = Auth::user()->id;
 
         //check database if nomination already exists, then add 1
-        $nominationsCheck = Nomination::where('name',$request->input('name') )->first();
+        $nominationsCheck = Nomination::where('name',$request->input('name') )
+        ->where('linkedin_url', $request->input('linkedin_url'))->first();
 
         if($nominationsCheck){//if it does
 
@@ -115,6 +120,7 @@ class NominationController extends AppBaseController
                 $no_of_nominations = $nominationsCheck['no_of_nominations'];
                     $input['no_of_nominations'] = $no_of_nominations + 1;
                     
+                    //update Nomination table with new number of nominations
                      $this->nominationRepository
                     ->update(['no_of_nominations'=> $input['no_of_nominations']], $nominationsCheck['id']);
 
@@ -132,7 +138,25 @@ class NominationController extends AppBaseController
         }else{
             //if nomination doesn't already exist, create new one
             $input['no_of_nominations'] = 1;
-            $nomination = $this->nominationRepository->create($input);
+            //get the image field
+            $image = $request->file('image');
+           //get the name of the image
+            $input['image'] = $image->getClientOriginalName();
+
+            //create the nomination
+            $nomination = Nomination::create($input);
+
+           
+            //upload image
+            if($nomination){
+                //choose where to save it in our larave app
+                    $destinationPath = public_path('/storage/upload/images/'.$nomination->id.'/');
+                
+                    $image->move($destinationPath, $input['image']);
+            }
+      
+        
+      
 
              //and track the user that created it
             NominationUser::create([
@@ -140,6 +164,7 @@ class NominationController extends AppBaseController
                 'category_id'=>$request->input('category_id'),
                 'nomination_id'=>$nomination->id
             ]);
+
 
         }
         

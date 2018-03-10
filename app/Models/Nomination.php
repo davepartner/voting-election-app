@@ -38,6 +38,7 @@ class Nomination extends Model
     public $fillable = [
         'name',
         'gender',
+        'image',
         'linkedin_url',
         'bio',
         'business_name',
@@ -57,6 +58,7 @@ class Nomination extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
+        'image' =>'string',
         'gender' => 'string',
         'linkedin_url' => 'string',
         'bio' => 'string',
