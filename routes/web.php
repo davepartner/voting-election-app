@@ -13,6 +13,7 @@
 
 Route::get('/', 'HomeController@index')->name('home')->middleware('auth');
 
+
 Route::get('/privacy-policy', function () {
     return view('privacy-policy');
 });
@@ -23,7 +24,7 @@ Route::get('/login', function(){
    return view('election-home');
 })->name('login');
 
-Route::get('/home', 'CategoriesController@index')->name('home')->middleware('auth');
+Route::get('/home', 'CategoryController@index')->name('home')->middleware('auth');
 
 //facebook login
 Route::get('login/facebook', 'Auth\LoginController@redirectToProvider')->name('login.facebook');
@@ -100,3 +101,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('nominations/vote/{nomination_id}/{category_id}', 'NominationController@vote')->name('nominations.vote');
 
 });
+

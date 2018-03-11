@@ -165,6 +165,9 @@ function hideURLbar(){ window.scrollTo(0,1); } </script>
 	 <script type="text/javascript" src="{{ asset('election-template/js/bootstrap-3.1.1.min.js') }}"></script>
 <!-- //for bootstrap working -->
 
+
+
+
     @yield('scripts')
 </body>
 </html>

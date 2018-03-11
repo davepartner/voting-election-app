@@ -77,23 +77,35 @@ class CategoryController extends AppBaseController
     
         ]);
 
-        $image = $request->file('image');
-        //get the name of the image
-        $input['imagename'] = $image->getClientOriginalName();
+      
 
        
         
-            $data = $request->all();
-            $data['image'] = $input['imagename'];
+            $data = $request->all();  
+            
             $data['user_id'] = Auth::user()->id;
+
+            if($request->file('image') ){
+                 $image = $request->file('image');
+            //get the name of the image
+            $input['imagename'] = $image->getClientOriginalName();
+            $data['image'] = $input['imagename'];
+            }
+           
+
+            
 
             $categoryUpload = Category::create($data);
 
-            if($categoryUpload){
-                //choose where to save it in our larave app
+            if($categoryUpload ){
+
+                if($request->file('image')){
+                     //choose where to save it in our larave app
                     $destinationPath = public_path('/storage/upload/images/'.$categoryUpload->id.'/');
                 
                     $image->move($destinationPath, $input['imagename']);
+                }
+               
             }
       
 
@@ -137,7 +149,7 @@ $hasNominatedBefore = 0;
 $nominationUser = NominationUser::where('user_id', Auth::user()->id)
                                  ->where('category_id', $id )->first();
  $nomination = 0;
- 
+
 if(Auth::user()->role_id > 2 ){ //admins can nominate more than once
 
  $nominationUser = NominationUser::where('user_id', Auth::user()->id)

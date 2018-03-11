@@ -6,7 +6,7 @@
 @if( $isWithinNominationPeriod == 'yes')
 
 <!--if user has nominated before -->
-                    @if(isset($hasNominatedBefore) && $hasNominatedBefore != 0)
+                    @if(isset($hasNominatedBefore) && $hasNominatedBefore != 0 && $nomination)
 
                     <div class="banner-bottom">
                             <div class="container col-md-offset-3">
@@ -54,7 +54,7 @@
 
 
 
-                    @elseif(!isset($hasNominatedBefore) || $hasNominatedBefore == 0)
+                    @elseif(!isset($hasNominatedBefore) || $hasNominatedBefore == 0 || !isset($nomination))
                         <!--if user has NOT nominated before -->
                         <!-- contact -->
                         <div class="contact">
@@ -68,7 +68,7 @@
                         <small>
                         <span class="glyphicon glyphicon-hand-right" style="color: grey; font-size: 15px;" aria-hidden="true"></span>
                                        
-                        Enter candidate's details </small> </h1>
+                        Enter candidate's details below </small> </h1>
                         </div>
 
 
