@@ -85,11 +85,14 @@
                                         <input type="text" placeholder="Full name, surname first" name="name" required=" ">
                                     
                                     
+                                          <input type="text" name="business_name" placeholder="business name or Job title" maxlength="100" required=" " >
+                                     {{--   <input type="text" name="reason_for_nomination" maxlength="150"
+                                        placeholder="Reason for nomination"  > 
+                                            <input type="text" name="bio" placeholder="(Optional) short bio" maxlength="100" >
+                                  
+                                        
                                         <input type="text" name="linkedin_url" placeholder="(Optional) Linkedin Url" >
-                                        <input type="text" name="bio" placeholder="(Optional) short bio" maxlength="100" >
-                                        <input type="text" name="business_name" placeholder="business name or Job title" maxlength="100" required=" " >
-                                        <input type="text" name="reason_for_nomination" maxlength="150"
-                                        placeholder="Reason for nomination" required=" " >
+                                        --}}
                                         
                                     
                                         <div class="form-group col-sm-6">
