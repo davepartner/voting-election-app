@@ -15,8 +15,9 @@
 </div>
 
 <!-- Linkedin Url Field -->
+@if(isset($category->id))
     {!! Form::hidden('category_id', $category->id, ['class' => 'form-control']) !!}
-
+@endif
 
 
 

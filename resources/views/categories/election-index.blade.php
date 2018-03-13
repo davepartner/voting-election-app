@@ -18,7 +18,8 @@
 
 
 
-			<div class="col-md-3 banner-bottom1-left banner-bottom1-left1" style="margin: 10px; margin-bottom: 40px; height: 250px; max-height: 250px; min-height: 250px; " >
+			<div class="col-md-3 banner-bottom1-left banner-bottom1-left1" 
+			style="margin: 10px; margin-bottom: 40px; height: 250px; max-height: 250px; min-height: 250px; " >
 			<a href="{!! route('categories.show', [$category->id]) !!}" >	
 			
 			<div class="banner-bottom1-lft">

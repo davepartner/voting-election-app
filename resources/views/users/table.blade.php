@@ -41,7 +41,23 @@
                   </tr>
                 </thead>
                 <tbody>
-                @foreach($users as $user)
+                
+
+                <?php 
+                foreach($users as $user) {
+                        //to prevent super admin from accidentally deleting his own account
+                        //and thereby locking everyone out of the platform
+                        //super admin account should not be listed among users
+                        //you can find other ways to mitigate against this.
+                        //for me here, the super admin is simply the first user to signup
+
+                        if($user->id == 1){
+                            //skip this iteration (dont display the first user that signed up)
+                            continue;
+                        }
+
+                        ?>
+
                     <tr role="row" class="odd">
                             <td class="sorting_1"> <a href="{!! route('users.show', [$user->id]) !!}" style="font-weight: bold;">
                                 {!! $user->name !!}
@@ -60,7 +76,7 @@
                                 </td>
                     </tr>
 
-                @endforeach
+                    <?php } ?>
                 
                 </tbody>
             
